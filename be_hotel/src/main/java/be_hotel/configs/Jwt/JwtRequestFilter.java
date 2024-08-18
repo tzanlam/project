@@ -1,4 +1,4 @@
-package be_hotel.configs;
+package be_hotel.configs.Jwt;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;

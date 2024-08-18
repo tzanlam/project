@@ -1,4 +1,4 @@
-package be_hotel.configs;
+package be_hotel.configs.Jwt;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

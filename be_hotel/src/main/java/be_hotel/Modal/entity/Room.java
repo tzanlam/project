@@ -1,6 +1,8 @@
 package be_hotel.Modal.entity;
 
+import be_hotel.Modal.entity.constants.StatusDeleted;
 import be_hotel.Modal.entity.constants.StatusRoom;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -34,17 +36,21 @@ public class Room {
     @Column(name = "image", nullable = false)
     private String image;
 
-    @Column(name = "created_date", nullable = false)
+    @Column(name = "created_date")
     private LocalDateTime createdDate;
 
-    @Column(name = "modified_date", nullable = false)
+    @Column(name = "modified_date")
     private LocalDateTime modifiedDate;
 
-    @Column(name = "status", nullable = false)
+    @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private StatusRoom status;
 
-    @OneToMany
-    @JoinColumn(name = "room_id")
+    @Column(name = "status_deleted")
+    @Enumerated(EnumType.STRING)
+    private StatusDeleted statusDeleted;
+
+    @OneToMany(mappedBy = "room")
+    @JsonManagedReference
     private List<Booking> bookingList;
 }

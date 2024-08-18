@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 
 public interface RoomService {
     public Room createRoom(RoomRequest roomRequest);
-    public Page<Room> getAllRoom(int page, int size);
+    Page<Room> getAllRoom(int page, int size);
     public Room updateRoom(RoomRequest roomRequest, Integer id);
     public String deleteRoom(Integer id);
 }

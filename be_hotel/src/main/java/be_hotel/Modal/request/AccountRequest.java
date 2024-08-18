@@ -3,6 +3,8 @@ package be_hotel.Modal.request;
 import be_hotel.Modal.entity.Account;
 import be_hotel.Modal.entity.constants.Gender;
 import be_hotel.Modal.entity.constants.Role;
+import be_hotel.Modal.entity.constants.StatusAccount;
+import be_hotel.validation.EmailValidation.UniqueEmail;
 import be_hotel.validation.UsernameValidation.UniqueUsername;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -28,10 +30,13 @@ public class AccountRequest {
     private String idCard;
     private String gender;
     private String phoneNumber;
+    @NotNull(message = "Email không được để trống")
+    @UniqueEmail(message = "Email đã tồn tại")
     private String email;
     private String role;
     private String createdDate;
     private String modifiedDate;
+    private String status;
 
     public Account asAccount(){
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -60,6 +65,53 @@ public class AccountRequest {
         } else {
             account.setModifiedDate(convertDateTime(this.modifiedDate));
         }
+        if (this.status == null || this.status.isEmpty()) {
+            account.setStatus(StatusAccount.ACTIVE);
+        } else {
+            account.setStatus(StatusAccount.valueOf(this.status));
+        }
         return account;
     }
+
+    public void updateAcccount(Account account) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+        // Cập nhật các thuộc tính của đối tượng Account hiện tại
+        if (this.username != null && !this.username.isEmpty()) {
+            account.setUsername(this.username);
+        }
+        if (this.password != null && !this.password.isEmpty()) {
+            account.setPassword(encoder.encode(this.password));
+        }
+        if (this.fullname != null && !this.fullname.isEmpty()) {
+            account.setFullName(this.fullname);
+        }
+        if (this.birthDate != null && !this.birthDate.isEmpty()) {
+            account.setBirthDate(convertDate(this.birthDate));
+        }
+        if (this.idCard != null && !this.idCard.isEmpty()) {
+            account.setIdCard(this.idCard);
+        }
+        if (this.gender != null && !this.gender.isEmpty()) {
+            account.setGender(Gender.valueOf(this.gender));
+        }
+        if (this.phoneNumber != null && !this.phoneNumber.isEmpty()) {
+            account.setPhoneNumber(this.phoneNumber);
+        }
+        if (this.email != null && !this.email.isEmpty()) {
+            account.setEmail(this.email);
+        }
+        if (this.role != null && !this.role.isEmpty()) {
+            account.setRole(Role.valueOf(this.role));
+        }
+
+        // Luôn cập nhật modifiedDate với thời gian hiện tại
+        account.setModifiedDate(LocalDateTime.now());
+
+        // Chỉ cập nhật status nếu có giá trị mới
+        if (this.status != null && !this.status.isEmpty()) {
+            account.setStatus(StatusAccount.valueOf(this.status));
+        }
+    }
+
 }

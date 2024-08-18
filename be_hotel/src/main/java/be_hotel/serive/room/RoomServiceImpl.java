@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class RoomServiceImpl implements RoomService {
@@ -14,7 +15,9 @@ public class RoomServiceImpl implements RoomService {
     private RoomRepository roomRepository;
     @Override
     public Room createRoom(RoomRequest roomRequest) {
-        return null;
+        Room room = roomRequest.asRoom();
+        roomRepository.save(room);
+        return room;
     }
 
     @Override
@@ -23,9 +26,9 @@ public class RoomServiceImpl implements RoomService {
     }
     @Override
     public Room updateRoom(RoomRequest roomRequest, Integer id) {
-        if (roomRepository.existsById(id)) {
-            Room room = roomRequest.asRoom();
-            room.setId(id);
+        Room room = roomRepository.findById(id).orElse(null);
+        if (room != null) {
+            room = roomRequest.updateRoom(room);
             roomRepository.save(room);
             return room;
         }

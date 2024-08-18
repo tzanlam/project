@@ -5,7 +5,7 @@ import be_hotel.Modal.request.AccountRequest;
 import be_hotel.Modal.request.LoginRequest;
 import be_hotel.Modal.response.AuthReponse;
 import be_hotel.Repository.AccountRepository;
-import be_hotel.configs.JwtTokenUltil;
+import be_hotel.configs.Jwt.JwtTokenUltil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -40,15 +40,16 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account updateAccount(int id,AccountRequest accountRequest) {
-        Account account = accountRepository.findById(id).get();
+    public Account updateAccount(int id, AccountRequest accountRequest) {
+        Account account = accountRepository.findById(id).orElse(null);
         if (account != null) {
-            account = accountRequest.asAccount();
+            accountRequest.updateAcccount(account);
             accountRepository.save(account);
             return account;
         }
         return null;
     }
+
 
     @Override
     public String deleteAccount(Integer id) {
